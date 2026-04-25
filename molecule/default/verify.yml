@@ -39,3 +39,4 @@
           - "'transport http' not in (caddyfile.content | b64decode)"
           - "'acme_ca' not in (caddyfile.content | b64decode)"
           - "'email' not in (caddyfile.content | b64decode)"
+          - "'tls ' not in (caddyfile.content | b64decode)"

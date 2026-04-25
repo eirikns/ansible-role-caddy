@@ -13,6 +13,7 @@ caddy_config: ""
 
 # List of virtual hosts to configure. Each item supports:
 #   domain (required): the domain name or address (e.g. "example.com" or ":8080")
+#   tls_email (optional): email for TLS certificate — overrides caddy_acme_email for this vhost
 #   reverse_proxy (optional): upstream address to proxy to (e.g. "localhost:8080")
 #   dial_timeout (optional): timeout for connecting to the upstream (e.g. "10s")
 #   response_header_timeout (optional): timeout for receiving response headers (e.g. "120s")
@@ -21,6 +22,7 @@ caddy_config: ""
 #   extra_config (optional): raw Caddyfile directives appended inside the vhost block
 caddy_vhosts: []
 # - domain: "example.com"
+#   tls_email: "admin@example.com"
 #   reverse_proxy: "localhost:8080"
 #   dial_timeout: "10s"
 #   response_header_timeout: "120s"

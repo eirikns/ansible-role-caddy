@@ -37,14 +37,13 @@ caddy_vhosts:
 List of virtual hosts to configure. Each entry supports:
 
 - `domain` — the domain name Caddy listens on (e.g. `"example.com"`)
+- `tls_email` — email for TLS certificate registration; overrides `caddy_acme_email` for this vhost. When either this or `caddy_acme_email` is set, a `tls` directive is added to the site block to enable ACME certificate provisioning.
 - `reverse_proxy` — upstream address to proxy requests to (e.g. `"localhost:8080"`)
 - `dial_timeout` — timeout for connecting to the upstream (e.g. `"10s"`)
 - `response_header_timeout` — timeout waiting for the upstream to send response headers (e.g. `"120s"`). Increase this for slow backends.
 - `encode` — enable gzip and zstd response compression (default: `false`)
 - `root` — document root; enables `file_server` when set
 - `extra_config` — raw Caddyfile directives appended inside the vhost block
-
-Caddy handles TLS automatically for any domain that resolves to the server.
 
 ```yaml
 caddy_config: |

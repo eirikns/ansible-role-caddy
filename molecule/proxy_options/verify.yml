@@ -29,3 +29,9 @@
         that:
           - "'encode gzip zstd' in (caddyfile.content | b64decode)"
         fail_msg: encode gzip zstd is missing from Caddyfile
+
+    - name: Assert tls directive is present with email
+      ansible.builtin.assert:
+        that:
+          - "'tls admin@example.com' in (caddyfile.content | b64decode)"
+        fail_msg: tls directive with email is missing from Caddyfile

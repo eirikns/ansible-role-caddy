@@ -15,7 +15,11 @@
 
 {% endif %}
 {% for vhost in caddy_vhosts %}
+{% set tls_email = vhost.tls_email | default(caddy_acme_email) %}
 {{ vhost.domain }} {
+{% if tls_email | length > 0 %}
+    tls {{ tls_email }}
+{% endif %}
 {% if vhost.reverse_proxy is defined %}
 {% if vhost.dial_timeout is defined or vhost.response_header_timeout is defined %}
     reverse_proxy {{ vhost.reverse_proxy }} {
