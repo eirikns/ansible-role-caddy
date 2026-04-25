@@ -3,20 +3,41 @@
 {% if caddy_config | length > 0 %}
 {{ caddy_config }}
 {% else %}
-{% if caddy_acme_email | length > 0 %}
+{% if caddy_acme_email | length > 0 or caddy_acme_ca | length > 0 %}
 {
+{% if caddy_acme_email | length > 0 %}
     email {{ caddy_acme_email }}
+{% endif %}
+{% if caddy_acme_ca | length > 0 %}
+    acme_ca {{ caddy_acme_ca }}
+{% endif %}
 }
 
 {% endif %}
 {% for vhost in caddy_vhosts %}
 {{ vhost.domain }} {
 {% if vhost.reverse_proxy is defined %}
+{% if vhost.dial_timeout is defined or vhost.response_header_timeout is defined %}
+    reverse_proxy {{ vhost.reverse_proxy }} {
+        transport http {
+{% if vhost.dial_timeout is defined %}
+            dial_timeout {{ vhost.dial_timeout }}
+{% endif %}
+{% if vhost.response_header_timeout is defined %}
+            response_header_timeout {{ vhost.response_header_timeout }}
+{% endif %}
+        }
+    }
+{% else %}
     reverse_proxy {{ vhost.reverse_proxy }}
+{% endif %}
 {% endif %}
 {% if vhost.root is defined %}
     root * {{ vhost.root }}
     file_server
+{% endif %}
+{% if vhost.encode | default(false) %}
+    encode gzip zstd
 {% endif %}
 {% if vhost.extra_config is defined %}
     {{ vhost.extra_config }}

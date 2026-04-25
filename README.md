@@ -20,15 +20,27 @@ caddy_acme_email: "admin@example.com"
 Email address registered with Let's Encrypt for certificate notifications. Optional but recommended.
 
 ```yaml
+caddy_acme_ca: "https://acme-staging-v02.api.letsencrypt.org/directory"
+```
+
+Override the ACME CA. Useful during testing to avoid Let's Encrypt production rate limits. Leave empty to use Let's Encrypt production.
+
+```yaml
 caddy_vhosts:
   - domain: "example.com"
     reverse_proxy: "localhost:8080"
+    dial_timeout: "10s"
+    response_header_timeout: "120s"
+    encode: true
 ```
 
 List of virtual hosts to configure. Each entry supports:
 
 - `domain` — the domain name Caddy listens on (e.g. `"example.com"`)
 - `reverse_proxy` — upstream address to proxy requests to (e.g. `"localhost:8080"`)
+- `dial_timeout` — timeout for connecting to the upstream (e.g. `"10s"`)
+- `response_header_timeout` — timeout waiting for the upstream to send response headers (e.g. `"120s"`). Increase this for slow backends.
+- `encode` — enable gzip and zstd response compression (default: `false`)
 - `root` — document root; enables `file_server` when set
 - `extra_config` — raw Caddyfile directives appended inside the vhost block
 
@@ -57,6 +69,8 @@ Reverse proxy with automatic HTTPS:
         caddy_vhosts:
           - domain: "jira.example.com"
             reverse_proxy: "localhost:8080"
+            response_header_timeout: "120s"
+            encode: true
 ```
 
 ## License

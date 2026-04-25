@@ -1,0 +1,31 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Read Caddyfile content
+      ansible.builtin.slurp:
+        src: /etc/caddy/Caddyfile
+      register: caddyfile
+
+    - name: Assert ACME global block is present
+      ansible.builtin.assert:
+        that:
+          - "'email admin@example.com' in (caddyfile.content | b64decode)"
+          - "'acme_ca https://acme-staging-v02.api.letsencrypt.org/directory' in (caddyfile.content | b64decode)"
+        fail_msg: ACME global block is missing or incorrect in Caddyfile
+
+    - name: Assert reverse proxy with timeouts is present
+      ansible.builtin.assert:
+        that:
+          - "'transport http' in (caddyfile.content | b64decode)"
+          - "'dial_timeout 10s' in (caddyfile.content | b64decode)"
+          - "'response_header_timeout 120s' in (caddyfile.content | b64decode)"
+        fail_msg: Reverse proxy transport block with timeouts is missing from Caddyfile
+
+    - name: Assert compression is enabled
+      ansible.builtin.assert:
+        that:
+          - "'encode gzip zstd' in (caddyfile.content | b64decode)"
+        fail_msg: encode gzip zstd is missing from Caddyfile

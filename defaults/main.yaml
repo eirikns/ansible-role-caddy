@@ -3,6 +3,10 @@
 # Recommended for production to receive certificate expiry notifications.
 caddy_acme_email: ""
 
+# ACME CA directory URL. Leave empty to use the default (Let's Encrypt production).
+# Set to "https://acme-staging-v02.api.letsencrypt.org/directory" for staging during testing.
+caddy_acme_ca: ""
+
 # Raw Caddyfile content. When set, written directly to /etc/caddy/Caddyfile,
 # overriding caddy_vhosts.
 caddy_config: ""
@@ -10,10 +14,14 @@ caddy_config: ""
 # List of virtual hosts to configure. Each item supports:
 #   domain (required): the domain name or address (e.g. "example.com" or ":8080")
 #   reverse_proxy (optional): upstream address to proxy to (e.g. "localhost:8080")
+#   dial_timeout (optional): timeout for connecting to the upstream (e.g. "10s")
+#   response_header_timeout (optional): timeout for receiving response headers (e.g. "120s")
+#   encode (optional): enable gzip/zstd response compression (default: false)
 #   root (optional): document root — enables file_server when set
 #   extra_config (optional): raw Caddyfile directives appended inside the vhost block
 caddy_vhosts: []
 # - domain: "example.com"
 #   reverse_proxy: "localhost:8080"
-# - domain: "static.example.com"
-#   root: "/var/www/html"
+#   dial_timeout: "10s"
+#   response_header_timeout: "120s"
+#   encode: true

@@ -35,3 +35,7 @@
         that:
           - "':8080' in (caddyfile.content | b64decode)"
           - "'reverse_proxy localhost:8081' in (caddyfile.content | b64decode)"
+          - "'encode' not in (caddyfile.content | b64decode)"
+          - "'transport http' not in (caddyfile.content | b64decode)"
+          - "'acme_ca' not in (caddyfile.content | b64decode)"
+          - "'email' not in (caddyfile.content | b64decode)"

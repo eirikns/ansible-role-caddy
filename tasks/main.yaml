@@ -3,6 +3,7 @@
   ansible.builtin.assert:
     that:
       - caddy_acme_email is string
+      - caddy_acme_ca is string
       - caddy_config is string
       - caddy_vhosts is iterable
       - caddy_vhosts is not string
