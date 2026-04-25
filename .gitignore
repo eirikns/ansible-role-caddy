@@ -1,0 +1,9 @@
+# Editors and IDEs
+*~
+*.iml
+.idea
+.vscode
+
+# Working dirs
+.ansible
+.venv

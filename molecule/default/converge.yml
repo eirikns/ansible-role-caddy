@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - role: eirikns.caddy
+      vars:
+        caddy_vhosts:
+          - domain: ":8080"
+            reverse_proxy: "localhost:8081"

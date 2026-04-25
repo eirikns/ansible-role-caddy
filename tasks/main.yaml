@@ -1,0 +1,30 @@
+---
+- name: Validate role variables
+  ansible.builtin.assert:
+    that:
+      - caddy_acme_email is string
+      - caddy_config is string
+      - caddy_vhosts is iterable
+      - caddy_vhosts is not string
+    quiet: true
+
+- name: Install Caddy
+  ansible.builtin.apt:
+    name: caddy
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Deploy Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload Caddy
+
+- name: Enable and start Caddy service
+  ansible.builtin.systemd:
+    name: caddy
+    enabled: true
+    state: started

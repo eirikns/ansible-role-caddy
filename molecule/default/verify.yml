@@ -1,0 +1,37 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Check caddy package is installed
+      ansible.builtin.command: dpkg-query -W -f='${Status}' caddy
+      register: caddy_pkg
+      changed_when: false
+
+    - name: Assert caddy is installed
+      ansible.builtin.assert:
+        that:
+          - "'install ok installed' in caddy_pkg.stdout"
+
+    - name: Check caddy service is enabled and running
+      ansible.builtin.systemd:
+        name: caddy
+      register: caddy_service
+
+    - name: Assert caddy service is enabled and running
+      ansible.builtin.assert:
+        that:
+          - caddy_service.status.ActiveState == "active"
+          - caddy_service.status.UnitFileState == "enabled"
+
+    - name: Read Caddyfile content
+      ansible.builtin.slurp:
+        src: /etc/caddy/Caddyfile
+      register: caddyfile
+
+    - name: Assert Caddyfile contains expected vhost configuration
+      ansible.builtin.assert:
+        that:
+          - "':8080' in (caddyfile.content | b64decode)"
+          - "'reverse_proxy localhost:8081' in (caddyfile.content | b64decode)"

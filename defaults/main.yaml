@@ -1,0 +1,19 @@
+---
+# Email address used for ACME TLS certificate registration.
+# Recommended for production to receive certificate expiry notifications.
+caddy_acme_email: ""
+
+# Raw Caddyfile content. When set, written directly to /etc/caddy/Caddyfile,
+# overriding caddy_vhosts.
+caddy_config: ""
+
+# List of virtual hosts to configure. Each item supports:
+#   domain (required): the domain name or address (e.g. "example.com" or ":8080")
+#   reverse_proxy (optional): upstream address to proxy to (e.g. "localhost:8080")
+#   root (optional): document root — enables file_server when set
+#   extra_config (optional): raw Caddyfile directives appended inside the vhost block
+caddy_vhosts: []
+# - domain: "example.com"
+#   reverse_proxy: "localhost:8080"
+# - domain: "static.example.com"
+#   root: "/var/www/html"
